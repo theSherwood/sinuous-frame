@@ -81,18 +81,105 @@ test('multiple top-level elements with text nodes', (t) => {
   let view = ingot(
     'text node',
     'text again',
-    ['p', 'some content'],
+    ['p', ['span', 'some content']],
     ['span', 'other content'],
     'other text node',
     ['p', { id: 'p-id' }, 'more content']
   );
-  console.log(view);
+
   t.equal(view.childNodes[0].textContent, 'text node');
   t.equal(view.childNodes[1].textContent, 'text again');
-  t.equal(view.childNodes[2].outerHTML, '<p>some content</p>');
+  t.equal(view.childNodes[2].outerHTML, '<p><span>some content</span></p>');
   t.equal(view.childNodes[3].outerHTML, '<span>other content</span>');
   t.equal(view.childNodes[4].textContent, 'other text node');
   t.equal(view.childNodes[5].outerHTML, '<p id="p-id">more content</p>');
+
+  t.end();
+});
+
+test('components : top-level', (t) => {
+  let component = () => {
+    return ingot([
+      'div',
+      ['p', 'contents,', ' contents!'],
+      ['p', 'and more contents'],
+    ]);
+  };
+
+  let view = ingot(
+    ['p', 'some content'],
+    [component],
+    ['span', 'other content']
+  );
+  t.equal(view.childNodes[0].outerHTML, '<p>some content</p>');
+  t.equal(
+    view.childNodes[1].outerHTML,
+    '<div><p>contents, contents!</p><p>and more contents</p></div>'
+  );
+  t.equal(view.childNodes[2].outerHTML, '<span>other content</span>');
+
+  let view2 = ingot([component]);
+  t.equal(
+    view2.outerHTML,
+    '<div><p>contents, contents!</p><p>and more contents</p></div>'
+  );
+
+  t.end();
+});
+
+test('components : nested', (t) => {
+  let component = () => {
+    return ingot([
+      'div',
+      ['p', 'contents,', ' contents!'],
+      ['p', 'and more contents'],
+    ]);
+  };
+
+  let view = ingot(['main', 'some content', [component]]);
+  t.equal(
+    view.outerHTML,
+    '<main>some content<div><p>contents, contents!</p><p>and more contents</p></div></main>'
+  );
+
+  t.end();
+});
+
+test('components : without props, with children', (t) => {
+  let component = (_, ...children) => {
+    return ingot([
+      'div',
+      ['p', 'contents,', ' contents!'],
+      ['p', 'and more contents'],
+      ...children,
+    ]);
+  };
+
+  let view = ingot([
+    'main',
+    'some content',
+    [component, ['p', 'child 1'], 'text child', ['p', 'child 2']],
+  ]);
+  t.equal(
+    view.outerHTML,
+    '<main>some content<div><p>contents, contents!</p><p>and more contents</p><p>child 1</p>text child<p>child 2</p></div></main>'
+  );
+
+  let view2 = ingot([
+    'main',
+    'some content',
+    [
+      component,
+      { foo: 'bar' },
+      ['p', 'child 1'],
+      'text child',
+      ['p', 'child 2'],
+    ],
+  ]);
+  t.equal(
+    view2.outerHTML,
+    '<main>some content<div><p>contents, contents!</p><p>and more contents</p><p>child 1</p>text child<p>child 2</p></div></main>'
+  );
 
   t.end();
 });
