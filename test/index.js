@@ -97,6 +97,19 @@ test('multiple top-level elements with text nodes', (t) => {
   t.end();
 });
 
+test('identifier shorthand', (t) => {
+  let view = ingot(['p#id.class-1.class-2']);
+  t.equal(view.outerHTML, '<p id="id" class="class-1 class-2"></p>');
+
+  let view2 = ingot(['p#id']);
+  t.equal(view2.outerHTML, '<p id="id"></p>');
+
+  let view3 = ingot(['p.class-1.class-2']);
+  t.equal(view3.outerHTML, '<p class="class-1 class-2"></p>');
+
+  t.end();
+});
+
 test('components : top-level', (t) => {
   let component = () => {
     return ingot([
@@ -128,6 +141,7 @@ test('components : top-level', (t) => {
 });
 
 test('components : nested', (t) => {
+  // single top-level element
   let component = () => {
     return ingot([
       'div',
@@ -142,10 +156,24 @@ test('components : nested', (t) => {
     '<main>some content<div><p>contents, contents!</p><p>and more contents</p></div></main>'
   );
 
+  // multiple top-level elements
+  let component2 = () => {
+    return ingot(
+      ['div', ['p', 'contents,', ' contents!'], ['p', 'and more contents']],
+      ['p', 'second element']
+    );
+  };
+
+  let view2 = ingot(['main', 'some content', [component2]]);
+  t.equal(
+    view2.outerHTML,
+    '<main>some content<div><p>contents, contents!</p><p>and more contents</p></div><p>second element</p></main>'
+  );
+
   t.end();
 });
 
-test('components : without props, with children', (t) => {
+test('components : with arguments', (t) => {
   let component = (_, ...children) => {
     return ingot([
       'div',
@@ -165,11 +193,20 @@ test('components : without props, with children', (t) => {
     '<main>some content<div><p>contents, contents!</p><p>and more contents</p><p>child 1</p>text child<p>child 2</p></div></main>'
   );
 
+  let component2 = ({ foo }, ...children) => {
+    return ingot([
+      'div',
+      ['p', 'contents,', ' contents! ', foo],
+      ['p', 'and more contents'],
+      ...children,
+    ]);
+  };
+
   let view2 = ingot([
     'main',
     'some content',
     [
-      component,
+      component2,
       { foo: 'bar' },
       ['p', 'child 1'],
       'text child',
@@ -178,7 +215,7 @@ test('components : without props, with children', (t) => {
   ]);
   t.equal(
     view2.outerHTML,
-    '<main>some content<div><p>contents, contents!</p><p>and more contents</p><p>child 1</p>text child<p>child 2</p></div></main>'
+    '<main>some content<div><p>contents, contents! bar</p><p>and more contents</p><p>child 1</p>text child<p>child 2</p></div></main>'
   );
 
   t.end();
