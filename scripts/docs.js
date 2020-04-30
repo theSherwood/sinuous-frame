@@ -8,7 +8,7 @@ const sources = [
     cwd: '',
     files: 'src/index.js',
     config: 'jsdoc.config.js',
-    output: 'docs/README.md',
+    output: 'README.md',
   },
 ];
 
@@ -23,7 +23,7 @@ async function addDocsAfterHeader({
   config,
   files,
   output,
-  header = '# API',
+  header = '## API',
 }) {
   const p = createCwd(cwd);
 
@@ -36,13 +36,12 @@ async function addDocsAfterHeader({
     var readmeFile = await fs.readFile(p(output), 'utf8');
   } catch (error) {
     console.log(`${c.bgRed.black(' OH NOES! ')} ${error}\n`);
-    readmeFile = '# API\n\n# Example\n\nTODO';
-  } finally {
-    // `[^]` matches any character, `.` doesn't include newlines.
-    const regex = new RegExp(`${header}[^]*?^#\\s`, 'mig');
-    readmeFile = readmeFile.replace(regex, `${header}\n\n${docs}# `);
-    await fs.writeFile(p(output), readmeFile);
   }
+
+  // `[^]` matches any character, `.` doesn't include newlines.
+  const regex = new RegExp(`${header}[^]*?^##\\s`, 'mig');
+  readmeFile = readmeFile.replace(regex, `${header}\n\n${docs}## `);
+  await fs.writeFile(p(output), readmeFile);
 }
 
 function createCwd(cwd) {

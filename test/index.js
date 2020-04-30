@@ -1,25 +1,25 @@
-import { ingot } from '../src/index';
+import { html } from '../src/index';
 import test from 'tape';
 
 test('one element without props or content', (t) => {
-  let view = ingot(['p']);
+  let view = html(['p']);
   t.equal(view.outerHTML, '<p></p>');
 
   t.end();
 });
 
 test('one element without props with string content', (t) => {
-  let view = ingot(['p', 'here is a string']);
+  let view = html(['p', 'here is a string']);
   t.equal(view.outerHTML, '<p>here is a string</p>');
 
-  let view2 = ingot(['p', 'here is a string', ' continued']);
+  let view2 = html(['p', 'here is a string', ' continued']);
   t.equal(view2.outerHTML, '<p>here is a string continued</p>');
 
   t.end();
 });
 
 test('one element with props with string content', (t) => {
-  let view = ingot([
+  let view = html([
     'p',
     { class: 'a-class', id: 'some-id' },
     'here is a string',
@@ -34,23 +34,23 @@ test('one element with props with string content', (t) => {
 });
 
 test('nesting elements', (t) => {
-  let view = ingot(['p', ['span', 'text content']]);
+  let view = html(['p', ['span', 'text content']]);
   t.equal(view.outerHTML, '<p><span>text content</span></p>');
 
-  let view2 = ingot(['p', ['span', ['mark', 'text content']]]);
+  let view2 = html(['p', ['span', ['mark', 'text content']]]);
   t.equal(view2.outerHTML, '<p><span><mark>text content</mark></span></p>');
 
   t.end();
 });
 
 test('nesting elements with multiple children', (t) => {
-  let view = ingot(['p', ['span', 'text content'], ['div', 'other content']]);
+  let view = html(['p', ['span', 'text content'], ['div', 'other content']]);
   t.equal(
     view.outerHTML,
     '<p><span>text content</span><div>other content</div></p>'
   );
 
-  let view2 = ingot([
+  let view2 = html([
     'p',
     { class: 'p-class' },
     ['span', { id: 'span-id' }, 'text content'],
@@ -65,7 +65,7 @@ test('nesting elements with multiple children', (t) => {
 });
 
 test('multiple top-level elements', (t) => {
-  let view = ingot(
+  let view = html(
     ['p', 'some content'],
     ['span', 'other content'],
     ['p', { id: 'p-id' }, 'more content']
@@ -78,7 +78,7 @@ test('multiple top-level elements', (t) => {
 });
 
 test('multiple top-level elements with text nodes', (t) => {
-  let view = ingot(
+  let view = html(
     'text node',
     'text again',
     ['p', ['span', 'some content']],
@@ -98,13 +98,13 @@ test('multiple top-level elements with text nodes', (t) => {
 });
 
 test('identifier shorthand', (t) => {
-  let view = ingot(['p#id.class-1.class-2']);
+  let view = html(['p#id.class-1.class-2']);
   t.equal(view.outerHTML, '<p id="id" class="class-1 class-2"></p>');
 
-  let view2 = ingot(['p#id']);
+  let view2 = html(['p#id']);
   t.equal(view2.outerHTML, '<p id="id"></p>');
 
-  let view3 = ingot(['p.class-1.class-2']);
+  let view3 = html(['p.class-1.class-2']);
   t.equal(view3.outerHTML, '<p class="class-1 class-2"></p>');
 
   t.end();
@@ -112,14 +112,14 @@ test('identifier shorthand', (t) => {
 
 test('components : top-level', (t) => {
   let component = () => {
-    return ingot([
+    return html([
       'div',
       ['p', 'contents,', ' contents!'],
       ['p', 'and more contents'],
     ]);
   };
 
-  let view = ingot(
+  let view = html(
     ['p', 'some content'],
     [component],
     ['span', 'other content']
@@ -131,7 +131,7 @@ test('components : top-level', (t) => {
   );
   t.equal(view.childNodes[2].outerHTML, '<span>other content</span>');
 
-  let view2 = ingot([component]);
+  let view2 = html([component]);
   t.equal(
     view2.outerHTML,
     '<div><p>contents, contents!</p><p>and more contents</p></div>'
@@ -143,14 +143,14 @@ test('components : top-level', (t) => {
 test('components : nested', (t) => {
   // single top-level element
   let component = () => {
-    return ingot([
+    return html([
       'div',
       ['p', 'contents,', ' contents!'],
       ['p', 'and more contents'],
     ]);
   };
 
-  let view = ingot(['main', 'some content', [component]]);
+  let view = html(['main', 'some content', [component]]);
   t.equal(
     view.outerHTML,
     '<main>some content<div><p>contents, contents!</p><p>and more contents</p></div></main>'
@@ -158,13 +158,13 @@ test('components : nested', (t) => {
 
   // multiple top-level elements
   let component2 = () => {
-    return ingot(
+    return html(
       ['div', ['p', 'contents,', ' contents!'], ['p', 'and more contents']],
       ['p', 'second element']
     );
   };
 
-  let view2 = ingot(['main', 'some content', [component2]]);
+  let view2 = html(['main', 'some content', [component2]]);
   t.equal(
     view2.outerHTML,
     '<main>some content<div><p>contents, contents!</p><p>and more contents</p></div><p>second element</p></main>'
@@ -175,7 +175,7 @@ test('components : nested', (t) => {
 
 test('components : with arguments', (t) => {
   let component = (_, ...children) => {
-    return ingot([
+    return html([
       'div',
       ['p', 'contents,', ' contents!'],
       ['p', 'and more contents'],
@@ -183,7 +183,7 @@ test('components : with arguments', (t) => {
     ]);
   };
 
-  let view = ingot([
+  let view = html([
     'main',
     'some content',
     [component, ['p', 'child 1'], 'text child', ['p', 'child 2']],
@@ -194,7 +194,7 @@ test('components : with arguments', (t) => {
   );
 
   let component2 = ({ foo }, ...children) => {
-    return ingot([
+    return html([
       'div',
       ['p', 'contents,', ' contents! ', foo],
       ['p', 'and more contents'],
@@ -202,7 +202,7 @@ test('components : with arguments', (t) => {
     ]);
   };
 
-  let view2 = ingot([
+  let view2 = html([
     'main',
     'some content',
     [

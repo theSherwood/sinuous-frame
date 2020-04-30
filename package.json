@@ -1,7 +1,7 @@
 {
-  "name": "javascript-library-boilerplate",
+  "name": "sinuous-frame",
   "version": "0.1.0",
-  "description": "Build your Javascript library without hassle",
+  "description": "Hiccup-inspired view syntax for Sinuous",
   "main": "./src/index.js",
   "scripts": {
     "lint": "npm run format && eslint '{src,test}/**/*.js'",
@@ -17,10 +17,10 @@
     "format:docs": "prettier --write '**/*.md'"
   },
   "keywords": [
-    "boilerplate",
-    "template",
-    "javascript",
-    "library"
+    "sinuous",
+    "reactive",
+    "functional",
+    "ui"
   ],
   "config": {
     "ghooks": {
@@ -32,7 +32,7 @@
   },
   "author": "Adam Sherwood <adam.the.sherwood@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/theSherwood/javascript-library-boilerplate#readme",
+  "homepage": "https://github.com/theSherwood/sinuous-frame#readme",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",

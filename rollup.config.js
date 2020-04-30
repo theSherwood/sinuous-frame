@@ -10,9 +10,11 @@ export default [
     output: [
       {
         file: 'dist/min.js',
-        name: 'test_library',
+        name: 'sinuousFrame',
         format: 'iife',
-        globals: {},
+        globals: {
+          sinuous: 'S',
+        },
         compact: true,
         plugins: [
           bundleSize({

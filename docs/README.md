@@ -1,7 +1,0 @@
-# API
-
-TODO
-
-# Example
-
-TODO

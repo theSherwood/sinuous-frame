@@ -13,7 +13,7 @@ module.exports = {
     showInheritedInNav: true,
   },
   opts: {
-    destination: './docs/',
+    destination: '.',
     encoding: 'utf8',
     private: true,
     recurse: true,
