@@ -1,5 +1,7 @@
-import { html } from '../src/index';
+import { html, svg } from '../src/index';
 import test from 'tape';
+
+/* --------- HTML --------- */
 
 test('one element without props or content', (t) => {
   let view = html(['p']);
@@ -220,3 +222,32 @@ test('components : with arguments', (t) => {
 
   t.end();
 });
+
+/* --------- SVG --------- */
+
+test('one svg without props or content', (t) => {
+  let view = svg(['svg']);
+  t.equal(view.outerHTML, '<svg></svg>');
+
+  t.end();
+});
+
+test('nesting svg with multiple children', (t) => {
+  let view = svg(['svg', ['circle'], ['ellipse']]);
+  t.equal(view.outerHTML, '<svg><circle></circle><ellipse></ellipse></svg>');
+
+  let view2 = svg([
+    'svg',
+    { class: 'svg-class' },
+    ['circle', { id: 'circle-id' }],
+    ['ellipse', { class: 'ellipse-class' }],
+  ]);
+  t.equal(
+    view2.outerHTML,
+    '<svg class="svg-class"><circle id="circle-id"></circle><ellipse class="ellipse-class"></ellipse></svg>'
+  );
+
+  t.end();
+});
+
+// TODO: add more svg tests
