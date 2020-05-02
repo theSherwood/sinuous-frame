@@ -2,7 +2,7 @@
 
 ![Badge size](https://img.badgesize.io/https://unpkg.com/sinuous-frame/dist/min.js?v=1&compression=gzip&label=gzip&style=flat-square)
 
-An alternative view syntax for [Sinuous](https://github.com/luwes/sinuous). Inspired by Hiccup.
+An alternative view syntax for [Sinuous](https://github.com/luwes/sinuous). Inspired by [Hiccup](https://github.com/weavejester/hiccup).
 
 ## Installation
 
@@ -15,8 +15,6 @@ Run the following inside your project directory:
 ```
 npm install sinuous-frame
 ```
-
-<!-- [Example CodeSandbox](https://codesandbox.io/s/sinuous-frame-esm-t3swm) -->
 
 ### CDN
 
@@ -35,15 +33,43 @@ Be sure you place it below your [Sinuous](https://github.com/luwes/sinuous) CDN,
 
 This places a `sinuousFrame` property on the `window` object.
 
-<!-- [Example CodeSandbox](https://codesandbox.io/s/sinuous-frame-cdn-lupwk) -->
+## Examples
+
+- [Sinuous Counters](https://codesandbox.io/s/sinuous-counters-lhqjk)
+- [Sinuous Simple Todo](https://codesandbox.io/s/sinuous-simple-todo-qj0n3)
+
+## Syntax
+
+Every element is an array of the form `[ <tag>, <attributes>, <children> ]`.
+
+`<tag>` is a string referring to the kind of dom element you want to create, such as `"div"`, and is required. `<attributes>` may be omitted, but if included should be a simple Javascript object of key-value pairs. There may be any number `<children>`, including 0, whether element arrays, strings, constants, observables, etc....
+
+```js
+['p', { class: 'counter' }, 1, ' is greater than ', 0, '.'];
+```
+
+The syntax for components is similar to element syntax except that the component identifier takes the place of `<tag>`.
+
+```js
+[
+  Modal,
+  { heading_text: 'Welcome' },
+  ['p', 'Is this your first time visiting?'],
+];
+```
 
 ## API
 
+###
+
+- [html](#html) ⇒ <code>Node</code> \| <code>DocumentFragment</code>
+- [svg](#svg) ⇒ <code>Node</code> \| <code>DocumentFragment</code>
+
 <a name="html"></a>
 
-### html(...node) ⇒ <code>Node</code> \| <code>DocumentFragment</code>
+### html ⇒ <code>Node</code> \| <code>DocumentFragment</code>
 
-**Kind**: global function  
+**Kind**: global constant  
 **Returns**: <code>Node</code> \| <code>DocumentFragment</code> - A DOM node or fragment for injecting into the document.
 
 | Param   | Type                                                               |
@@ -81,6 +107,27 @@ let view = html([
   [component, ['span', 'some more text'], ['span', 'and more text']],
   ['p', 'more content'],
 ]);
+```
+
+---
+
+<a name="svg"></a>
+
+### svg ⇒ <code>Node</code> \| <code>DocumentFragment</code>
+
+`svg` works in much the same way `html` does.
+
+**Kind**: global constant  
+**Returns**: <code>Node</code> \| <code>DocumentFragment</code> - An SVG DOM node or fragment for injecting into the document.
+
+| Param   | Type                                                               |
+| ------- | ------------------------------------------------------------------ |
+| ...node | <code>Array</code> \| <code>String</code> \| <code>function</code> |
+
+**Example**
+
+```js
+let view = svg(['svg', { class: 'class-1' }, ['circle'], ['rect']]);
 ```
 
 ---
